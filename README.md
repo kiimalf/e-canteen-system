@@ -1,58 +1,187 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🍱 Smart Canteen System (Kantin Online)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Platform pemesanan makanan digital yang modern untuk ekosistem kantin, mendukung transaksi cashless dengan integrasi Midtrans dan verifikasi pesanan menggunakan QR Code.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Layer | Teknologi |
+| :--- | :--- |
+| **Backend** | PHP 8.1+, Laravel 10 |
+| **Frontend** | Blade Templating, Vanilla CSS, JavaScript (ES6) |
+| **Database** | MySQL |
+| **Payment Gateway** | Midtrans API (Snap & Notification) |
+| **UI Components** | SweetAlert2, Select2, Material Design Icons |
+| **Utilities** | Html5-QRCode (Scanner), Axios (AJAX), QR Code Generator |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🧠 Arsitektur
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+### Struktur Direktori
+```text
+sistem_kantin/
+├── app/
+│   ├── Http/Controllers/    # Logika bisnis & pengelolaan request
+│   └── Models/               # Representasi tabel database
+├── database/
+│   ├── migrations/          # Struktur skema tabel
+│   └── seeders/             # Data awal untuk testing
+├── public/                  # Asset statis (CSS, JS, Images)
+├── resources/
+│   └── views/               # Template tampilan Blade
+│       ├── customer/        # UI untuk pembeli
+│       ├── vendor/          # UI untuk penjual/admin kantin
+│       └── layouts/         # Template master
+└── routes/
+    └── web.php              # Definisi rute aplikasi
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+- `app/Http/Controllers/` → Berisi logic untuk proses checkout, integrasi Midtrans, dan verifikasi QR Code.
+- `resources/views/` → Berisi seluruh file tampilan yang dipisahkan berdasarkan peran user (Customer/Vendor).
+- `routes/web.php` → Mengatur navigasi antar halaman dan endpoint untuk webhook Midtrans.
+- `database/migrations/` → Definisi teknis tabel `vendors`, `menus`, `pesanans`, dan `detail_pesanans`.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🔑 Fitur Utama
 
-## Code of Conduct
+### 👤 Role: Customer (Guest)
+- **Guest Ordering:** Pesan makanan tanpa perlu pendaftaran akun.
+- **Smart Menu Search:** Pencarian menu cepat menggunakan Select2.
+- **Integrated Payment:** Pembayaran otomatis via QRIS, VA, atau E-Wallet melalui Midtrans.
+- **Digital Receipt:** Bukti pesanan berupa QR Code yang dapat diunduh/disimpan.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 🏪 Role: Vendor (Admin Kantin)
+- **Vendor Dashboard:** Statistik penjualan dan status pesanan masuk.
+- **Menu Management:** Kelola stok, harga, dan foto menu makanan/minuman.
+- **QR Order Scanner:** Verifikasi pesanan pelanggan secara real-time menggunakan kamera.
+- **Transaction Logs:** Lacak riwayat pembayaran yang sudah diverifikasi oleh sistem.
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🔄 Flow Sistem
 
-## License
+### 🛒 Alur Pelanggan (Customer)
+1. Pelanggan membuka aplikasi dan memilih menu dari vendor tertentu.
+2. Memasukkan item ke keranjang dan menekan tombol **Bayar**.
+3. Sistem mengarahkan ke portal pembayaran Midtrans.
+4. Setelah bayar, sistem akan menampilkan halaman sukses beserta **QR Code unik**.
+5. Pelanggan menyimpan QR Code tersebut untuk ditunjukkan ke vendor.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 👨‍🍳 Alur Penjual (Vendor)
+1. Vendor login ke dashboard menggunakan akun yang terdaftar.
+2. Vendor membuka menu **Scanner Pesanan**.
+3. Vendor memindai (scan) QR Code yang dibawa oleh pelanggan.
+4. Jika valid, sistem mengubah status pesanan menjadi "Diproses" atau "Selesai".
+5. Vendor menyerahkan pesanan kepada pelanggan.
+
+---
+
+## 🗄️ Database Design
+
+| Tabel | Keterangan |
+| :--- | :--- |
+| `vendors` | Menyimpan data profil toko/kantin. |
+| `menus` | Berisi daftar makanan/minuman beserta harga dan stok. |
+| `pesanans` | Master data transaksi, status bayar, dan total harga. |
+| `detail_pesanans` | Rincian item menu yang dibeli dalam satu transaksi. |
+| `payment_logs` | Catatan notifikasi webhook dari Midtrans. |
+
+### Relasi Antar Tabel
+```text
+vendors
+└── menus (1:N)
+    └── detail_pesanans (N:1)
+        └── pesanans (N:1)
+                └── payment_logs (1:N)
+```
+
+---
+
+## 🔐 Keamanan
+
+- **CSRF Protection:** Melindungi setiap form dari serangan Cross-Site Request Forgery.
+- **Midtrans Signature Key:** Verifikasi keaslian data notifikasi pembayaran dari server Midtrans.
+- **Password Hashing:** Menggunakan Bcrypt untuk keamanan akun vendor.
+- **Input Validation:** Validasi ketat pada setiap inputan user untuk mencegah SQL Injection.
+
+---
+
+## 📦 Setup & Instalasi
+
+1. **Clone Project**
+```bash
+git clone https://github.com/[username]/sistem-kantin.git
+cd sistem-kantin
+```
+
+2. **Install Dependencies**
+```bash
+composer install
+npm install && npm run dev
+```
+
+3. **Konfigurasi Environment**
+Buat file `.env` dan masukkan API Key Midtrans:
+```env
+DB_DATABASE=sistem_kantin
+DB_USERNAME=root
+DB_PASSWORD=
+
+MIDTRANS_SERVER_KEY=SB-Mid-server-XXXXX
+MIDTRANS_CLIENT_KEY=SB-Mid-client-XXXXX
+MIDTRANS_IS_PRODUCTION=false
+```
+
+4. **Setup Database**
+```bash
+php artisan key:generate
+php artisan migrate --seed
+```
+
+5. **Jalankan Aplikasi**
+```bash
+php artisan serve
+```
+
+---
+
+## 🎨 Design System
+
+| Status | Warna | Hex Code |
+| :--- | :--- | :--- |
+| **Success / Paid** | Green | `#1bcfb4` |
+| **Pending** | Orange/Yellow | `#fed713` |
+| **Failed / Error** | Red | `#fe7c96` |
+| **Primary Theme** | Purple | `#b66dff` |
+
+- **UI Style:** Modern Dashboard (Purple Admin inspiration), Glassmorphism elements, Responsive layout.
+
+---
+
+## 🐞 Known Issues
+
+- [ ] Kamera scanner kadang tidak fokus pada beberapa browser mobile tertentu.
+- [ ] Delay notifikasi dari Midtrans sandbox pada jam sibuk.
+
+---
+
+## 📌 Rencana Pengembangan
+
+- [ ] Integrasi Push Notification untuk vendor saat pesanan masuk.
+- [ ] Laporan penjualan dalam format Excel/PDF bulanan.
+- [ ] Fitur diskon dan promo kode.
+
+---
+
+## 👨‍💻 Author
+
+- **[Nama Anda]** - Mahasiswa [Nama Universitas]
+- GitHub: [@github_username](https://github.com/github_username)
+
+---
+
+## 📜 Lisensi
+Proyek ini dibuat untuk tujuan pembelajaran dalam Workshop Pengembangan Web.
