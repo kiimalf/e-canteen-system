@@ -178,8 +178,8 @@ php artisan serve
 
 ## 👨‍💻 Author
 
-- **[Nama Anda]** - Mahasiswa [Nama Universitas]
-- GitHub: [@github_username](https://github.com/github_username)
+- **Nabil Hakim Alfikri** - Universitas Airlangga
+- GitHub: [@kiimalf](https://github.com/kiimalf)
 
 ---
 
